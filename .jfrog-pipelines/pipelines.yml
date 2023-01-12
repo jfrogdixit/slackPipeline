@@ -1,0 +1,36 @@
+template: true   # required for local templates
+valuesFilePath: ./values.yml
+
+resources:
+  - name: myFirstRepo
+    type: GitRepo
+    configuration:
+      # SCM integration where the repository is located
+      gitProvider: {{ .Values.myRepo.gitProvider }} # this will be replaced from values.yml
+      # Repository path, including org name/repo name
+      path: {{ .Values.myRepo.path }} # this will be replaced from values.yml
+      branches:
+        # Specifies which branches will trigger dependent steps
+        include: main
+
+  - name: myPropertyBag
+    type: PropertyBag
+    configuration:
+      commitSha: 1 
+      runID: 1
+
+pipelines:
+  - name: pipe1
+    steps:
+      - name: test_step_1
+        type: Bash
+        configuration:
+          integrations:
+            - name: mySlack       # This is the name of the Slack integration you created in your test instance
+        execution:
+          onStart:
+            - send_notification mySlack --text "starting test_step_1"         # replace 'mySlack' with the name of your Slack integration
+          onExecute:
+            - send_notification mySlack --text "onExecute, past test commands"  # replace 'mySlack' with the name of your Slack integration
+          onSuccess:
+            - send_notification mySlack      # without '--text' to send a generic notification that includes the pipeline name and step name
