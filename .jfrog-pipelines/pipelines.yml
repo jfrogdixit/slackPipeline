@@ -7,11 +7,13 @@ pipelines:
       - name: test_step_1
         type: Bash
         configuration:
+          environmentVariables:
+            message: "sending notification using env variable"
           integrations:
             - name: mySlack       # This is the name of the Slack integration you created in your test instance
         execution:
           onStart:
-            - send_notification mySlack --text "starting test_step_1"         # replace 'mySlack' with the name of your Slack integration
+            - send_notification mySlack --text "message ${message}"         # replace 'mySlack' with the name of your Slack integration
           onExecute:
             - send_notification mySlack --text "onExecute, past test commands"  # replace 'mySlack' with the name of your Slack integration
           onSuccess:
