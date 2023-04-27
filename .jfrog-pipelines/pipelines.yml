@@ -13,7 +13,7 @@ pipelines:
             - name: mySlack       # This is the name of the Slack integration you created in your test instance
         execution:
           onStart:
-            - send_notification mySlack --text "message ${message}"         # replace 'mySlack' with the name of your Slack integration
+            - send_notification mySlack --text "message @dixitb"         # replace 'mySlack' with the name of your Slack integration
           onExecute:
             - send_notification mySlack --text "onExecute, past test commands"  # replace 'mySlack' with the name of your Slack integration
           onSuccess:
